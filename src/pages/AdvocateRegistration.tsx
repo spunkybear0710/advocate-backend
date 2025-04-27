@@ -4,6 +4,8 @@ import { useToast } from "@/components/ui/use-toast";
 import FormHeader from "@/components/AdvocateRegistration/FormHeader";
 import PersonalInfoSection from "@/components/AdvocateRegistration/PersonalInfoSection";
 import ProfessionalInfoSection from "@/components/AdvocateRegistration/ProfessionalInfoSection";
+import ExperienceSection from "@/components/AdvocateRegistration/ExperienceSection";
+import AvailabilitySection from "@/components/AdvocateRegistration/AvailabilitySection";
 import DocumentsSection from "@/components/AdvocateRegistration/DocumentsSection";
 import AccountSection from "@/components/AdvocateRegistration/AccountSection";
 import SubmitButton from "@/components/AdvocateRegistration/SubmitButton";
@@ -16,6 +18,7 @@ const AdvocateRegistration = () => {
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
+    // Basic information
     fullName: "",
     mobileNumber: "",
     email: "",
@@ -27,6 +30,21 @@ const AdvocateRegistration = () => {
     city: "",
     state: "",
     languages: [] as string[],
+    
+    // Detailed experience
+    ongoingCases: "",
+    notableCases: "",
+    awards: "",
+    publications: "",
+    
+    // Availability
+    virtualConsultation: true,
+    inPersonMeeting: true,
+    availableDays: [] as string[],
+    availableTimeSlots: [] as string[],
+    consentProfileVisibility: false,
+    
+    // Account
     password: "",
     confirmPassword: "",
     agreeToTerms: false,
@@ -45,7 +63,7 @@ const AdvocateRegistration = () => {
   } | null>(null);
 
   // Handle form input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -141,6 +159,19 @@ const AdvocateRegistration = () => {
 
     if (files.profilePicture && !validators.validateFile(files.profilePicture, false)) {
       newErrors.profilePicture = "Profile picture must be less than 5MB";
+    }
+
+    // Availability Validation
+    if (!validators.validateArray(formData.availableDays)) {
+      newErrors.availableDays = "Select at least one available day";
+    }
+
+    if (!validators.validateArray(formData.availableTimeSlots)) {
+      newErrors.availableTimeSlots = "Select at least one available time slot";
+    }
+
+    if (!formData.consentProfileVisibility) {
+      newErrors.consentProfileVisibility = "You must consent to profile visibility";
     }
 
     // Account Validation
@@ -247,6 +278,18 @@ const AdvocateRegistration = () => {
             errors={errors}
             handleCheckboxChange={handleCheckboxChange}
             handleSelectChange={handleSelectChange}
+          />
+
+          <ExperienceSection
+            formData={formData}
+            errors={errors}
+            handleChange={handleChange}
+          />
+
+          <AvailabilitySection
+            formData={formData}
+            errors={errors}
+            handleCheckboxChange={handleCheckboxChange}
           />
 
           <DocumentsSection

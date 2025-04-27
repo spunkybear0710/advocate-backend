@@ -14,6 +14,15 @@ interface AdvocateRegistrationData {
   city: string;
   state: string;
   languages: string[];
+  ongoingCases: string;
+  notableCases: string;
+  awards: string;
+  publications: string;
+  virtualConsultation: boolean;
+  inPersonMeeting: boolean;
+  availableDays: string[];
+  availableTimeSlots: string[];
+  consentProfileVisibility: boolean;
   password: string;
   barIdProof: File | null;
   profilePicture: File | null;
@@ -37,6 +46,7 @@ export const registerAdvocate = async (data: AdvocateRegistrationData): Promise<
   }
   
   // Mock successful registration
+  console.log("Advocate registration data:", data);
   return {
     success: true,
     message: "Registration submitted successfully. Your application is under review.",
